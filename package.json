@@ -1,0 +1,30 @@
+{
+  "name": "bot-turnos-titulosvalidez",
+  "version": "1.0.0",
+  "description": "Monitor de turnos disponibles para Validez Nacional de Títulos con notificaciones a Telegram",
+  "main": "monitor.js",
+  "scripts": {
+    "start": "node monitor.js",
+    "dev": "node monitor.js",
+    "postinstall": "npx puppeteer browsers install chrome"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "monitor",
+    "turnos",
+    "telegram",
+    "puppeteer"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^22.0.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "dotenv": "^16.4.5"
+  },
+  "puppeteer": {
+    "skipDownload": false
+  }
+}

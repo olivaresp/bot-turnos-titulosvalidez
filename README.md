@@ -3,6 +3,11 @@
 
 Sistema automatizado que monitorea la disponibilidad de turnos en el sitio de **Validez Nacional de Títulos** del Ministerio de Educación de Argentina y envía notificaciones instantáneas a Telegram cuando hay turnos disponibles.
 
+Solución al mensaje
+> **"Lamentablemente no hay turnos disponibles debido al alto nivel de demanda. Por favor, vuelva a intentar en otro momento."**
+
+Este bot te ayuda a conseguir un turno automáticamente sin tener que revisar constantemente la página.
+
 [![Node.js](https://img.shields.io/badge/Node.js->=18.0.0-green.svg)](https://nodejs.org/) [![License](https://img.shields.io/badge/license-ISC-blue.svg)](LICENSE) [![Puppeteer](https://img.shields.io/badge/Puppeteer-22.0.0-orange.svg)](https://pptr.dev/) [![GitHub](https://img.shields.io/badge/GitHub-bot--turnos--titulosvalidez-181717?logo=github)](https://github.com/olivaresp/bot-turnos-titulosvalidez)
 
 
@@ -15,6 +20,7 @@ Sistema automatizado que monitorea la disponibilidad de turnos en el sitio de **
 - [Configuración](#-configuración)
 - [Uso](#️-uso)
 - [Notificaciones](#-notificaciones)
+- [Licencia](#-licencia)
 
 ---
 
@@ -152,8 +158,6 @@ Este proyecto está bajo la licencia **ISC**.
 
 ---
 
-## 🙏 Agradecimientos
+## 🔍 Keywords
 
-- [Puppeteer](https://pptr.dev/) - Automatización del navegador
-- [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-api) - API de Telegram
-- [dotenv](https://github.com/motdotla/dotenv) - Gestión de variables de entorno
+Bot turnos validez nacional títulos, reconocimiento estudios extranjeros Argentina, turnos Ministerio Educación, "lamentablemente no hay turnos disponibles debido al alto nivel de demanda", bot telegram turnos, monitor turnos automático, validez títulos extranjeros, apostilla Argentina, convalidación títulos, homologación títulos extranjeros

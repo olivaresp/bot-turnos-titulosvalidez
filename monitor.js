@@ -75,7 +75,7 @@ async function verificarTurnos() {
 
     // Navegar a la URL
     const response = await page.goto(URL_INICIAL, {
-      waitUntil: 'networkidle2'
+      waitUntil: 'domcontentloaded'
     });
 
     // Esperar un momento adicional para asegurar que se complete cualquier redirección

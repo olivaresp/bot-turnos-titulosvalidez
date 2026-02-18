@@ -19,6 +19,13 @@ if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID || !INTERVALO_MINUTOS) {
 // Inicializar bot de Telegram
 const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: false });
 
+// Zona horaria Argentina (para que la hora en mensajes sea correcta en Railway/servidores UTC)
+const TZ_ARGENTINA = 'America/Argentina/Buenos_Aires';
+
+function horaArgentina() {
+  return new Date().toLocaleString('es-AR', { timeZone: TZ_ARGENTINA });
+}
+
 // Estado del monitor
 let estadoAnterior = null;
 let intentos = 0;
@@ -43,7 +50,7 @@ async function verificarTurnos() {
   let browser;
   try {
     console.log(`\n🔍 Verificando turnos... (Intento #${++intentos})`);
-    console.log(`⌚️ ${new Date().toLocaleString('es-AR')}`);
+    console.log(`⌚️ ${horaArgentina()}`);
 
     // Configuración de launch (optimizada para contenedores/Docker/Railway)
     const launchOptions = {
@@ -103,7 +110,7 @@ async function verificarTurnos() {
         const mensaje = `🎉 *¡TURNOS DISPONIBLES!*\n\n` +
                        `La página de Validez Nacional de Títulos está accesible.\n\n` +
                        `🔗 [Acceder ahora](${URL_INICIAL})\n\n` +
-                       `⏰ Detectado: ${new Date().toLocaleString('es-AR')}`;
+                       `⏰ Detectado: ${horaArgentina()}`;
         
         await enviarMensajeTelegram(mensaje);
         estadoAnterior = 'disponible';
@@ -125,7 +132,7 @@ async function verificarTurnos() {
       if (estadoAnterior === 'disponible') {
         const mensaje = `😔 *Turnos ya no disponibles*\n\n` +
                        `Los turnos que estaban disponibles se agotaron.\n\n` +
-                       `⏰ Detectado: ${new Date().toLocaleString('es-AR')}\n\n` +
+                       `⏰ Detectado: ${horaArgentina()}\n\n` +
                        `Seguiré monitoreando y te avisaré cuando vuelvan a estar disponibles! 🔔`;
         
         await enviarMensajeTelegram(mensaje);

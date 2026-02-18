@@ -57,15 +57,8 @@ async function verificarTurnos() {
       ]
     };
 
-    // Intentar lanzar el navegador
-    try {
-      browser = await puppeteer.launch(launchOptions);
-    } catch (error) {
-      // Si falla, intentar con Chrome del sistema
-      console.log('⚠️  Intentando con Chrome del sistema...');
-      launchOptions.channel = 'chrome';
-      browser = await puppeteer.launch(launchOptions);
-    }
+    // Lanzar el navegador con Chromium bundled de Puppeteer
+    browser = await puppeteer.launch(launchOptions);
 
     const page = await browser.newPage();
     

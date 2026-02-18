@@ -23,7 +23,16 @@ const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: false });
 const TZ_ARGENTINA = 'America/Argentina/Buenos_Aires';
 
 function horaArgentina() {
-  return new Date().toLocaleString('es-AR', { timeZone: TZ_ARGENTINA });
+  return new Date().toLocaleString('es-AR', {
+    timeZone: TZ_ARGENTINA,
+    hour12: false,
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
 }
 
 // Estado del monitor

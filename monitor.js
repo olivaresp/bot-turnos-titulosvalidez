@@ -45,7 +45,7 @@ async function verificarTurnos() {
     console.log(`\n🔍 Verificando turnos... (Intento #${++intentos})`);
     console.log(`⌚️ ${new Date().toLocaleString('es-AR')}`);
 
-    // Configuración de launch
+    // Configuración de launch (optimizada para contenedores/Docker/Railway)
     const launchOptions = {
       headless: 'new',
       args: [
@@ -53,7 +53,22 @@ async function verificarTurnos() {
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
         '--disable-accelerated-2d-canvas',
-        '--disable-gpu'
+        '--disable-gpu',
+        '--disable-software-rasterizer',
+        '--disable-extensions',
+        '--disable-background-networking',
+        '--disable-default-apps',
+        '--disable-sync',
+        '--disable-translate',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--disable-crash-reporter',
+        '--disable-breakpad',
+        '--disable-features=site-per-process',
+        '--memory-pressure-off',
+        '--disable-renderer-backgrounding',
+        '--disable-backgrounding-occluded-windows'
       ]
     };
 

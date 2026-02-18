@@ -21,9 +21,9 @@ aptPkgs = [
 [phases.install]
 # Instalar dependencias de Node.js y descargar Chrome para Puppeteer
 cmds = [
-  'npm install',
-  'npx puppeteer browsers install chrome'
+  'pnpm install',
+  'pnpm exec puppeteer browsers install chrome'
 ]
 
 [start]
-cmd = 'npm start'
+cmd = 'pnpm start'

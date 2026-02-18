@@ -7,12 +7,13 @@ const URL_INICIAL = 'https://titulosvalidez.educacion.gob.ar/validez/detitulos/i
 const URL_NO_ACCESS = 'noaccess.php';
 const INTERVALO_MINUTOS = process.env.INTERVALO_MINUTOS;
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;           // Notificaciones privadas (monitor iniciado, error, detenido)
+const TELEGRAM_CHAT_ID_CANAL = process.env.TELEGRAM_CHAT_ID_CANAL; // Canal (turnos disponibles, turnos cerrados)
 
 // Validar variables de entorno
-if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID || !INTERVALO_MINUTOS) {
+if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID || !TELEGRAM_CHAT_ID_CANAL || !INTERVALO_MINUTOS) {
   console.error('Error: Faltan variables de entorno');
-  console.error('Por favor configura TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID y INTERVALO_MINUTOS en el archivo .env');
+  console.error('Configura TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (privado), TELEGRAM_CHAT_ID_CANAL y INTERVALO_MINUTOS en .env');
   process.exit(1);
 }
 
@@ -23,7 +24,16 @@ const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: false });
 const TZ_ARGENTINA = 'America/Argentina/Buenos_Aires';
 
 function horaArgentina() {
-  return new Date().toLocaleString('es-AR', { timeZone: TZ_ARGENTINA });
+  return new Date().toLocaleString('es-AR', {
+    timeZone: TZ_ARGENTINA,
+    hour12: false,
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
 }
 
 // Estado del monitor
@@ -32,14 +42,17 @@ let intentos = 0;
 let erroresConsecutivos = 0;
 
 /**
- * Envía un mensaje por Telegram
+ * Envía un mensaje por Telegram al chat/channel indicado
+ * @param {string} chatId - ID del chat o canal (@channel o numérico)
+ * @param {string} mensaje - Texto del mensaje
+ * @param {string} [destino='Telegram'] - Etiqueta para el log (ej: 'canal', 'privado')
  */
-async function enviarMensajeTelegram(mensaje) {
+async function enviarMensajeTelegram(chatId, mensaje, destino = 'Telegram') {
   try {
-    await bot.sendMessage(TELEGRAM_CHAT_ID, mensaje, { parse_mode: 'Markdown' });
-    console.log('✅ Mensaje enviado a Telegram');
+    await bot.sendMessage(chatId, mensaje, { parse_mode: 'Markdown' });
+    console.log(`✅ Mensaje enviado (${destino})`);
   } catch (error) {
-    console.error('❌ Error al enviar mensaje a Telegram:', error.message);
+    console.error(`❌ Error al enviar mensaje (${destino}):`, error.message);
   }
 }
 
@@ -112,7 +125,7 @@ async function verificarTurnos() {
                        `🔗 [Acceder ahora](${URL_INICIAL})\n\n` +
                        `⏰ Detectado: ${horaArgentina()}`;
         
-        await enviarMensajeTelegram(mensaje);
+        await enviarMensajeTelegram(TELEGRAM_CHAT_ID_CANAL, mensaje, 'canal');
         estadoAnterior = 'disponible';
       }
     } else {
@@ -125,17 +138,17 @@ async function verificarTurnos() {
                        `Actualmente NO hay turnos disponibles.\n\n` +
                        `Te avisaré cuando estén disponibles! 🔔`;
         
-        await enviarMensajeTelegram(mensaje);
+        await enviarMensajeTelegram(TELEGRAM_CHAT_ID, mensaje, 'privado');
       }
       
       // Notificar cuando los turnos dejan de estar disponibles
       if (estadoAnterior === 'disponible') {
-        const mensaje = `😔 *Turnos ya no disponibles*\n\n` +
-                       `Los turnos que estaban disponibles se agotaron.\n\n` +
+        const mensaje = `😔 *Turnos cerrados*\n\n` +
+                       `Los turnos se han cerrado.\n\n` +
                        `⏰ Detectado: ${horaArgentina()}\n\n` +
                        `Seguiré monitoreando y te avisaré cuando vuelvan a estar disponibles! 🔔`;
         
-        await enviarMensajeTelegram(mensaje);
+        await enviarMensajeTelegram(TELEGRAM_CHAT_ID_CANAL, mensaje, 'canal');
       }
       
       estadoAnterior = 'no_disponible';
@@ -154,7 +167,7 @@ async function verificarTurnos() {
                      `Error: ${error.message}\n\n` +
                      `El monitor seguirá intentando...`;
       
-      await enviarMensajeTelegram(mensaje);
+      await enviarMensajeTelegram(TELEGRAM_CHAT_ID, mensaje, 'privado');
       erroresConsecutivos = 0; // Reset para no spamear
     }
   } finally {
@@ -170,7 +183,7 @@ async function verificarTurnos() {
 async function iniciarMonitor() {
   console.log('🚀 Iniciando monitor de turnos...');
   console.log(`📊 Intervalo: ${INTERVALO_MINUTOS} minuto(s)`);
-  console.log('─'.repeat(75));
+  console.log('─'.repeat(50));
 
   // Primera verificación
   await verificarTurnos();
@@ -191,7 +204,7 @@ process.on('SIGINT', async () => {
                  `El monitor de turnos se ha detenido.\n` +
                  `Total de verificaciones: ${intentos}`;
   
-  await enviarMensajeTelegram(mensaje);
+  await enviarMensajeTelegram(TELEGRAM_CHAT_ID, mensaje, 'privado');
   process.exit(0);
 });
 

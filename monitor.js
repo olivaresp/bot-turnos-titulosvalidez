@@ -67,7 +67,7 @@ async function verificarTurnos() {
 
     // Configuración de launch (optimizada para contenedores/Docker/Railway)
     const launchOptions = {
-      headless: 'new',
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -81,14 +81,15 @@ async function verificarTurnos() {
         '--disable-sync',
         '--disable-translate',
         '--no-first-run',
-        '--no-zygote',
-        '--single-process',
         '--disable-crash-reporter',
         '--disable-breakpad',
         '--disable-features=site-per-process',
         '--memory-pressure-off',
         '--disable-renderer-backgrounding',
-        '--disable-backgrounding-occluded-windows'
+        '--disable-backgrounding-occluded-windows',
+        '--disable-dbus',
+        '--disable-ipc-flooding-protection',
+        '--max-old-space-size=512'
       ]
     };
 
